@@ -45,7 +45,7 @@ async def help_on_place():
 
 #Обучение
 async def studying():
-    studying_list = ['Презентации', 'Видеоматериалы', 'Тесты', 'Дополнительная литература'] + standard_answer_list
+    studying_list = ['Презентации', 'Видеоматериалы', 'Тест', 'Дополнительная литература'] + standard_answer_list
     keyword = InlineKeyboardBuilder()
     for information in studying_list:
         keyword.add(InlineKeyboardButton(text=information, callback_data=information))
@@ -69,5 +69,46 @@ async def contact():
     contact_details = ['О проекте', 'обратная связь'] + standard_answer_list
     keyword = InlineKeyboardBuilder()
     for information in contact_details:
+        keyword.add(InlineKeyboardButton(text=information, callback_data=information))
+    return keyword.adjust(2).as_markup()
+
+
+async def send_question(question):
+    keyword = InlineKeyboardBuilder()
+    for answer in question["answers"]:
+        keyword.add(InlineKeyboardButton(text=answer, callback_data=answer))
+    keyword.add(InlineKeyboardButton(text="Выход", callback_data="НазадИЗтеста"))
+    return keyword.adjust(2).as_markup()
+
+
+# async def send_question_true_answer(question):
+#     keyword = InlineKeyboardBuilder()
+#     for answer in question["answers"]:
+#         if answer in question["correct"]:
+#             keyword.add(InlineKeyboardButton(text="✅"+answer, callback_data=answer))
+#     keyword.add(InlineKeyboardButton(text="Выход", callback_data="НазадИЗтеста"))
+#     return keyword.adjust(2).as_markup()
+async def send_question_true_answer(answer, question):
+    keyword = InlineKeyboardBuilder()
+    if answer in question["correct"]:
+        keyword.add(InlineKeyboardButton(text="✅"+answer, callback_data=answer))
+    else:
+        keyword.add(InlineKeyboardButton(text="❌" + answer, callback_data=answer))
+
+    keyword.add(InlineKeyboardButton(text="Выход", callback_data="НазадИЗтеста"))
+    return keyword.adjust(2).as_markup()
+
+
+async def to_hand():
+    keyword = InlineKeyboardBuilder()
+    keyword.add(InlineKeyboardButton(text="Назад", callback_data="НазадИЗтеста"))
+    return keyword.adjust(2).as_markup()
+
+
+async def psychology():
+    sp = ['Агрессия', 'Истерика', 'Психомоторное возбуждение', 'Ступор', 'Паническая атака', 'Апатия', 'Страх',
+          'Нервная дрожь', 'Плач'] + standard_answer_list
+    keyword = InlineKeyboardBuilder()
+    for information in sp:
         keyword.add(InlineKeyboardButton(text=information, callback_data=information))
     return keyword.adjust(2).as_markup()
